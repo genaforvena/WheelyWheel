@@ -68,7 +68,7 @@ class MainActivity : LifecycleActivity() {
         }
         numberStr?.let {
             if (!it.isBlank()) {
-                viewModel.setValue(Integer.parseInt(numberStr.toString()))
+                setValue(Integer.parseInt(numberStr.toString()))
             }
         }
     }
