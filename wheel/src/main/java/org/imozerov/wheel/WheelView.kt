@@ -136,7 +136,38 @@ class WheelView : View {
         }
     }
 
-    private fun moveItems() {
+    fun showItem(value: Int, increment: Boolean) {
+        if (currentShownItem == value) {
+            return
+        }
+        if (increment) {
+            postDelayed(MoveForward(value), UPDATE_RATE)
+        } else {
+            postDelayed(MoveBackward(value), UPDATE_RATE)
+        }
+    }
+
+    private inner class MoveForward(private val value: Int) : Runnable {
+        override fun run() {
+            moveItemsForward()
+            invalidate()
+            if (currentShownItem != value) {
+                postDelayed(MoveForward(value), UPDATE_RATE)
+            }
+        }
+    }
+
+    private inner class MoveBackward(private val value: Int) : Runnable {
+        override fun run() {
+            moveItemsBackward()
+            invalidate()
+            if (currentShownItem != value) {
+                postDelayed(MoveBackward(value), UPDATE_RATE)
+            }
+        }
+    }
+
+    private fun moveItemsForward() {
         val item0 = items[0]
 
         var i = 0
@@ -145,24 +176,18 @@ class WheelView : View {
             i += 1
         }
         items[9] = item0
-        if (currentShownItem < items.size - 1) currentShownItem ++ else currentShownItem = 0
+        if (currentShownItem < items.lastIndex) currentShownItem ++ else currentShownItem = 0
     }
 
-    var showItem: Int = 0
-        set(value) {
-            if (currentShownItem == value) {
-                return
-            }
-            postDelayed(MoveTo(value), UPDATE_RATE)
-        }
+    private fun moveItemsBackward() {
+        val item9 = items.last()
 
-    private inner class MoveTo(private val value: Int) : Runnable {
-        override fun run() {
-            moveItems()
-            invalidate()
-            if (currentShownItem != value) {
-                postDelayed(MoveTo(value), UPDATE_RATE)
-            }
+        var i = items.size - 1
+        while (i > 0) {
+            items[i] = items[i - 1]
+            i -= 1
         }
+        items[0] = item9
+        if (currentShownItem > 0) currentShownItem -- else currentShownItem = 9
     }
 }

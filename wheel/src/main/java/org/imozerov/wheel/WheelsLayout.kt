@@ -12,6 +12,8 @@ class WheelsLayout : LinearLayout {
     private val wheel3: WheelView
     private val wheel4: WheelView
 
+    private var lastNumber: Int = 0
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
@@ -35,8 +37,12 @@ class WheelsLayout : LinearLayout {
     }
 
     fun showNumber(number: Int) {
+        if (number == lastNumber) {
+            return
+        }
         val digits = extractDigits(number)
-        digits.forEachIndexed { index, value -> setWheelValue(index, value) }
+        digits.forEachIndexed { index, value -> setWheelValue(index, value, lastNumber < number) }
+        lastNumber = number
     }
 
     private fun extractDigits(number: Int): List<Int> {
@@ -53,13 +59,13 @@ class WheelsLayout : LinearLayout {
         return digits
     }
 
-    private fun setWheelValue(index: Int, value: Int) {
+    private fun setWheelValue(index: Int, value: Int, increment: Boolean) {
         when (index) {
-            0 -> wheel0.showItem = value
-            1 -> wheel1.showItem = value
-            2 -> wheel2.showItem = value
-            3 -> wheel3.showItem = value
-            4 -> wheel4.showItem = value
+            0 -> wheel0.showItem(value, increment)
+            1 -> wheel1.showItem(value, increment)
+            2 -> wheel2.showItem(value, increment)
+            3 -> wheel3.showItem(value, increment)
+            4 -> wheel4.showItem(value, increment)
         }
     }
 }
