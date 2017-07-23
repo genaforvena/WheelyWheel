@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : LifecycleActivity() {
     private val handler = Handler()
@@ -59,7 +60,7 @@ class MainActivity : LifecycleActivity() {
                 handler.removeCallbacksAndMessages(null)
                 handler.postDelayed({
                     viewModel.safelySetNumberOrIgnore(p0)
-                }, 300)
+                }, TimeUnit.SECONDS.toMillis(1))
             }
         })
     }
