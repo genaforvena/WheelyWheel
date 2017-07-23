@@ -21,7 +21,9 @@ class MainActivity : LifecycleActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.wheelValue().observe(this, Observer<Int> { wheelValue ->
-            wheel.text = wheelValue.toString()
+            wheelValue?.let {
+                wheel.showNumber(it)
+            }
         })
 
         viewModel.mode().observe(this, Observer { mode ->

@@ -6,12 +6,10 @@
     android:layout_height="match_parent"
     tools:context="org.imozerov.wheelywheel.MainActivity">
 
-    <TextView
-        android:id="@+id/wheel"
+    <org.imozerov.wheel.WheelsLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:id="@+id/wheel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintLeft_toLeftOf="parent"
