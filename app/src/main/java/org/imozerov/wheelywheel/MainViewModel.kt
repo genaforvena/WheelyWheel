@@ -15,19 +15,18 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     private val handler = Handler()
 
-    private val stopHandler = AtomicBoolean(true)
     private val incrementor = object : Runnable {
         override fun run() {
-            if (stopHandler.get()) {
-                return
-            }
-
-            val value = if (wheelValue.value != null) wheelValue.value as Int + 1 else 0
+            val value = if (wheelValue.value != null && wheelValue.value!! < LIMIT) wheelValue.value as Int + 1 else 0
             wheelValue.postValue(value)
-
-            if (!stopHandler.get()) {
-                handler.postDelayed(this, TimeUnit.SECONDS.toMillis(1))
-            }
+            handler.postDelayed(this, TimeUnit.SECONDS.toMillis(1))
+        }
+    }
+    private val decrementor = object : Runnable {
+        override fun run() {
+            val value = if (wheelValue.value != null && wheelValue.value!! > 0) wheelValue.value as Int - 1 else LIMIT
+            wheelValue.postValue(value)
+            handler.postDelayed(this, TimeUnit.SECONDS.toMillis(1))
         }
     }
 
@@ -37,7 +36,6 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun wheelValue() : LiveData<Int> = wheelValue
-
     fun mode() : LiveData<Mode> = mode
 
     fun setValue(value: Int) {
@@ -54,17 +52,19 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
         mode.value = newMode
 
+        handler.removeCallbacksAndMessages(null)
         when (newMode) {
             Mode.EDIT -> {
-                stopHandler.set(true)
+
             }
             Mode.RANDOM -> {
-                stopHandler.set(true)
                 wheelValue.value = Random().nextInt(LIMIT)
             }
-            Mode.TIMER -> {
-                stopHandler.set(false)
+            Mode.TIMER_INCREMENT -> {
                 handler.post(incrementor)
+            }
+            Mode.TIMER_DECREMENT -> {
+                handler.post(decrementor)
             }
         }
     }
@@ -75,5 +75,5 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 }
 
 enum class Mode {
-    EDIT, RANDOM, TIMER
+    EDIT, RANDOM, TIMER_INCREMENT, TIMER_DECREMENT
 }

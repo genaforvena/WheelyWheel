@@ -29,8 +29,12 @@ class MainActivity : LifecycleActivity() {
 
         viewModel.mode().observe(this, Observer { mode ->
             when (mode) {
-                Mode.TIMER -> {
-                    timer.isChecked = true
+                Mode.TIMER_INCREMENT -> {
+                    timer_increment.isChecked = true
+                    number_to_show.visibility = View.GONE
+                }
+                Mode.TIMER_DECREMENT -> {
+                    timer_decrement.isChecked = true
                     number_to_show.visibility = View.GONE
                 }
                 Mode.EDIT -> {
@@ -44,7 +48,8 @@ class MainActivity : LifecycleActivity() {
             }
         })
 
-        timer.setOnCheckedChangeListener { _, isChecked -> if (isChecked) viewModel.setMode(Mode.TIMER) }
+        timer_increment.setOnCheckedChangeListener { _, isChecked -> if (isChecked) viewModel.setMode(Mode.TIMER_INCREMENT) }
+        timer_decrement.setOnCheckedChangeListener { _, isChecked -> if (isChecked) viewModel.setMode(Mode.TIMER_DECREMENT) }
         pick_number.setOnCheckedChangeListener { _, isChecked -> if (isChecked) {
             viewModel.setMode(Mode.EDIT)
             viewModel.safelySetNumberOrIgnore(number_to_show.text)
