@@ -32,6 +32,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     }
 
     init {
+        wheelValue.value = Random().nextInt(LIMIT)
         mode.value = Mode.RANDOM
     }
 
